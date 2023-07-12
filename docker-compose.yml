@@ -1,0 +1,21 @@
+services:
+  db:
+    build: docker/db
+    networks:
+      - backend
+  api:
+    build:
+      dockerfile: docker/api/Dockerfile
+      context: .
+    depends_on:
+      - db
+    networks:
+      - backend
+    ports:
+      - 3000:3000
+    command: npm run docker:prod
+
+networks:
+  backend:
+    driver: bridge
+

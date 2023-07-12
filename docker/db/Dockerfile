@@ -1,0 +1,4 @@
+FROM postgres:14.8
+ENV POSTGRES_USER "test"
+ENV POSTGRES_PASSWORD "testtest"
+
