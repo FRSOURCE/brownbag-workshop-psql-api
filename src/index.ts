@@ -134,6 +134,130 @@ app.post("/api/users", async (req, res) => {
   res.json(user);
 });
 
+/**
+ * @openapi
+ * /api/users/{id}:
+ *   patch:
+ *      summary: Update particular data for a user
+ *      description: Ur
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          description: User id to update
+ *          required: true
+ *          schema:
+ *            type: integer
+ *      requestBody:
+ *        description: Update customer with properties to be changed
+ *        content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             name: user data
+ *             required: true
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: User name
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 description: User email
+ *                 example: test@test.pl
+ *      responses:
+ *        200:
+ *          description: Successfully updated a user
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  data:
+ *                      type: object
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                          description: User id
+ *                          example: 1
+ *                        name:
+ *                          type: string
+ *                          description: Username
+ *                        email:
+ *                          type: string
+ *                          description: Username
+ *        400:
+ *          description: Missing id of a user
+ */
+
+app.patch("/api/users/:id", async (req, res) => {
+  const data = req.body;
+  const { id } = req.params;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ error: "Missing id of user to update" });
+  }
+
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: Number(id)
+      },
+      data: {
+        name: data.name || undefined,
+        email: data.email || undefined, 
+      }
+    })
+
+    res.json(user);
+  } catch (e) {
+    res.status(404).json({});
+  }
+});
+
+/**
+ * @openapi
+ * /api/users/{id}:
+ *   delete:
+ *      summary: Deletes a user
+ *      description: delete a pet
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          description: User id to delete
+ *          required: true
+ *          schema:
+ *            type: integer
+ *      responses:
+ *        400:
+ *          description: Missing id of a user
+ *        404:
+ *          description: User not found
+ */
+
+app.delete("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ error: "Missing id of user to delete" });
+  }
+
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    res.json(user);
+  } catch (e) {
+    res.status(404).json({error: "User not found"});
+  }
+});
+
 app.get("/api/users/:id", async (req, res) => {
   const { id } = req.params;
 
