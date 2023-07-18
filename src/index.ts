@@ -26,7 +26,7 @@ app.get("/api/books", (req, res) => {
     data: [
       { id: 1, name: "Witcher" },
       { id: 2, name: "Lord of the Rings" },
-      { id: 3, name: "Diune" },
+      { id: 3, name: "Dune" },
     ],
   });
 });
@@ -107,6 +107,7 @@ app.get("/api/users", async (req, res) => {
  *                         type: string
  *                         description: Username
  */
+
 app.post("/api/users", async (req, res) => {
   const data = req.body;
 
@@ -121,7 +122,7 @@ app.post("/api/users", async (req, res) => {
   if (typeof data.name !== "string" || typeof data.email !== "string") {
     return res
       .status(400)
-      .json({ error: "name or email have wrong dta types!" });
+      .json({ error: "name or email have wrong data types!" });
   }
 
   const user = await prisma.user.create({
@@ -147,6 +148,156 @@ app.get("/api/users/:id", async (req, res) => {
     res.json(user);
   } catch (e) {
     res.status(404).json({});
+  }
+});
+
+
+/**
+ * @openapi
+ * /api/users: 
+ *   delete:
+ *     summary: Removes user
+ *     parameters:
+ *       id: 
+ *         name: /{id}
+ *         in: path
+ *         required: true
+ *
+ *     responses:
+ *       200:
+ *         description: Successfully removed a user
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *       400:
+ *         description: Id has wrong data type
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *       404:
+ *         description: No user with given id
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+*/
+
+app.delete("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (typeof id !== "string") {
+    res
+      .status(400)
+      .send("Id has wrong data type");
+  }
+
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    res.send(`User with id ${id} was deleted`);
+  } catch (e) {
+    res.status(404).send(`There is no user with id ${id}`);
+
+  }
+});
+
+/**
+ * @openapi
+ * /api/users: 
+ *   put:
+ *     summary: Updates user data
+ *     parameters:
+ *       id: 
+ *         name: /id
+ *         in: query
+ *         required: true
+ * 
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             name: user data
+ *             required: true
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: User name
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 description: User email
+ *                 example: test@test.pl
+ *
+ *     responses:
+ *       200:
+ *         description: Successfully removed a user
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: string
+ *       400:
+ *         description: Data are not provided or Id has wrong data type
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: string
+ *       404:
+ *         description: No user with given id
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: string
+*/
+
+app.put("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+  const { data } = req.body;
+  console.log(id, data);
+
+  if (typeof id !== "string") {
+    res
+      .status(400)
+      .send("Id has wrong data type. It should be string.");
+  }
+
+  if (!data) {
+    res
+      .status(400)
+      .send("Data are not provided");
+  }
+
+  const { name, email } = data;
+
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: Number(id)
+      },
+      data: {
+        name,
+        email,
+      }
+    });
+
+    res.send(`${id} user data updated`);
+  } catch (e) {
+    res.status(404).send(`User with id ${id} not found`);
   }
 });
 
