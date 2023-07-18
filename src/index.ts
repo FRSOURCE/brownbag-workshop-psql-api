@@ -157,12 +157,6 @@ app.get("/api/users/:id", async (req, res) => {
  * /api/users: 
  *   delete:
  *     summary: Removes user
- *     parameters:
- *       id: 
- *         name: /{id}
- *         in: path
- *         required: true
- *
  *     responses:
  *       200:
  *         description: Successfully removed a user
@@ -182,6 +176,11 @@ app.get("/api/users/:id", async (req, res) => {
  *           text/plain:
  *             schema:
  *               type: string
+ *   parameters:
+ *   - name: id
+ *     in: path
+ *     description: Id of the user to be removed 
+ *     required: true
 */
 
 app.delete("/api/users/:id", async (req, res) => {
@@ -211,12 +210,7 @@ app.delete("/api/users/:id", async (req, res) => {
  * @openapi
  * /api/users: 
  *   put:
- *     summary: Updates user data
- *     parameters:
- *       id: 
- *         name: /id
- *         in: query
- *         required: true
+ *     summary: Updates user data 
  * 
  *     requestBody:
  *       content:
@@ -241,34 +235,29 @@ app.delete("/api/users/:id", async (req, res) => {
  *         content:
  *           text/plain:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: string
+ *               type: string
  *       400:
  *         description: Data are not provided or Id has wrong data type
  *         content:
  *           text/plain:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: string
+ *               type: string
  *       404:
  *         description: No user with given id
  *         content:
  *           text/plain:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: string
+ *               type: string
+ *     parameters:
+ *     - name: id
+ *       in: query
+ *       description: Id of the user to be updated 
+ *       required: true
 */
 
 app.put("/api/users/:id", async (req, res) => {
   const { id } = req.params;
   const { data } = req.body;
-  console.log(id, data);
 
   if (typeof id !== "string") {
     res
