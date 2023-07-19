@@ -3,9 +3,27 @@ import express from "express";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import pkg from "../package.json";
+import cors from "cors";
+import helmet from "helmet";
 
 const prisma = new PrismaClient();
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:52017",
+  })
+);
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "script-src": ["'self'"],
+      },
+    },
+  })
+);
 
 const openapiSpec = swaggerJsdoc({
   definition: {
@@ -149,6 +167,8 @@ app.get("/api/users/:id", async (req, res) => {
     res.status(404).json({});
   }
 });
+
+app.use(express.static("public"));
 
 const server = app.listen(3000, () =>
   console.log(`
