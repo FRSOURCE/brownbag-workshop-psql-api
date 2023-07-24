@@ -274,8 +274,6 @@ app.put("/api/users/:id", async (req, res) => {
       .json("Data are not provided");
   }
 
-  // const { name, email } = data;
-
   try {
     const user = await prisma.user.update({
       where: {
