@@ -154,28 +154,31 @@ app.get("/api/users/:id", async (req, res) => {
 
 /**
  * @openapi
- * /api/users: 
+ * /api/users/{id}: 
  *   delete:
  *     summary: Removes user
  *     responses:
  *       200:
  *         description: Successfully removed a user
  *         content:
- *           text/plain:
+ *           application/json:
  *             schema:
  *               type: string
+ *               example: User with id 255 was deleted
  *       400:
  *         description: Id has wrong data type
  *         content:
- *           text/plain:
+ *           application/json:
  *             schema:
  *               type: string
+ *               example: Id has wrong data type
  *       404:
  *         description: No user with given id
  *         content:
- *           text/plain:
+ *           application/json:
  *             schema:
  *               type: string
+ *               example: There is no user with id 255
  *   parameters:
  *   - name: id
  *     in: path
@@ -189,7 +192,7 @@ app.delete("/api/users/:id", async (req, res) => {
   if (typeof id !== "string") {
     res
       .status(400)
-      .send("Id has wrong data type");
+      .json("Id has wrong data type");
   }
 
   try {
@@ -199,16 +202,16 @@ app.delete("/api/users/:id", async (req, res) => {
       },
     });
 
-    res.send(`User with id ${id} was deleted`);
+    res.json(`User with id ${id} was deleted`);
   } catch (e) {
-    res.status(404).send(`There is no user with id ${id}`);
+    res.status(404).json(`There is no user with id ${id}`);
 
   }
 });
 
 /**
  * @openapi
- * /api/users: 
+ * /api/users/{id}: 
  *   put:
  *     summary: Updates user data 
  * 
@@ -233,24 +236,24 @@ app.delete("/api/users/:id", async (req, res) => {
  *       200:
  *         description: Successfully removed a user
  *         content:
- *           text/plain:
+ *           application/json:
  *             schema:
  *               type: string
  *       400:
  *         description: Data are not provided or Id has wrong data type
  *         content:
- *           text/plain:
+ *           application/json:
  *             schema:
  *               type: string
  *       404:
  *         description: No user with given id
  *         content:
- *           text/plain:
+ *           application/json:
  *             schema:
  *               type: string
  *     parameters:
  *     - name: id
- *       in: query
+ *       in: path
  *       description: Id of the user to be updated 
  *       required: true
 */
@@ -262,31 +265,28 @@ app.put("/api/users/:id", async (req, res) => {
   if (typeof id !== "string") {
     res
       .status(400)
-      .send("Id has wrong data type. It should be string.");
+      .json("Id has wrong data type. It should be string.");
   }
 
   if (!data) {
     res
       .status(400)
-      .send("Data are not provided");
+      .json("Data are not provided");
   }
 
-  const { name, email } = data;
+  // const { name, email } = data;
 
   try {
     const user = await prisma.user.update({
       where: {
         id: Number(id)
       },
-      data: {
-        name,
-        email,
-      }
+      data: data
     });
 
-    res.send(`${id} user data updated`);
+    res.json(`${id} user data updated`);
   } catch (e) {
-    res.status(404).send(`User with id ${id} not found`);
+    res.status(404).json(`User with id ${id} not found`);
   }
 });
 
