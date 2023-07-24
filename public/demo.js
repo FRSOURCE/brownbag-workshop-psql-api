@@ -6,4 +6,3 @@ document.querySelector('button').addEventListener('click', async () => {
 
   document.querySelector('div').textContent = JSON.stringify(res, undefined, 2);
 })
-})

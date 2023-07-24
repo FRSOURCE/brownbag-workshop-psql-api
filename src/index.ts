@@ -20,6 +20,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         "script-src": ["'self'"],
+        "img-src": ["'self'", "https://fastly.picsum.photos"],
       },
     },
   })
