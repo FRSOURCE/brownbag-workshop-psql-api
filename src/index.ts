@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:52017",
+    origin: "http://localhost:41871",
   })
 );
 
@@ -20,6 +20,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         "script-src": ["'self'"],
+        "img-src": ['https://picsum.photos/']
       },
     },
   })
