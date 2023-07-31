@@ -139,7 +139,7 @@ app.post("/api/users", async (req, res) => {
  * /api/users/{id}:
  *   patch:
  *      summary: Update particular data for a user
- *      description: Ur
+ *      description: Update user data
  *      parameters:
  *        - name: id
  *          in: path
@@ -187,6 +187,8 @@ app.post("/api/users", async (req, res) => {
  *                          description: Username
  *        400:
  *          description: Missing id of a user
+ *        404:
+ *          description: User not found
  */
 
 app.patch("/api/users/:id", async (req, res) => {
@@ -212,7 +214,7 @@ app.patch("/api/users/:id", async (req, res) => {
 
     res.json(user);
   } catch (e) {
-    res.status(404).json({});
+    res.status(404).json({error: "User not found"});
   }
 });
 
@@ -230,6 +232,8 @@ app.patch("/api/users/:id", async (req, res) => {
  *          schema:
  *            type: integer
  *      responses:
+ *        200:
+ *          description: Successfully updated
  *        400:
  *          description: Missing id of a user
  *        404:
