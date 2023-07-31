@@ -223,14 +223,17 @@ app.delete("/api/users/:id", async (req, res) => {
  *             name: user data
  *             required: true
  *             properties:
- *               name:
- *                 type: string
- *                 description: User name
- *                 example: John Doe
- *               email:
- *                 type: string
- *                 description: User email
- *                 example: test@test.pl
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                    name:
+ *                      type: string
+ *                      description: User name
+ *                      example: John Doe
+ *                    email:
+ *                      type: string
+ *                      description: User email
+ *                      example: test@test.pl
  *
  *     responses:
  *       200:
