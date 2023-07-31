@@ -233,7 +233,7 @@ app.patch("/api/users/:id", async (req, res) => {
  *            type: integer
  *      responses:
  *        200:
- *          description: Successfully updated
+ *          description: Successfully removed
  *        400:
  *          description: Missing id of a user
  *        404:
