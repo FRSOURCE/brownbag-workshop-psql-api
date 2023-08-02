@@ -8,10 +8,9 @@ import helmet from "helmet";
 
 const prisma = new PrismaClient();
 const app = express();
-
 app.use(
   cors({
-    origin: "http://localhost:52017",
+    origin: "http://127.0.0.1:5173",
   })
 );
 
@@ -24,7 +23,6 @@ app.use(
     },
   })
 );
-
 const openapiSpec = swaggerJsdoc({
   definition: {
     openapi: "3.0.0",
